@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileText, Plus, Edit2, Trash2, Image, Save, X, Upload, Eye, EyeOff, Settings, Palette, Type, Layout, Menu as MenuIcon } from 'lucide-react';
+import { FileText, Plus, Edit2, Trash2, Image, Save, X, Upload, Eye, EyeOff, Settings, Palette, Type, Layout, Menu as MenuIcon, Home } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase';
 import { MediaLibrary } from '../components/MediaLibrary';
 import { NavigationManager } from '../components/NavigationManager';
 import { ImagePicker } from '../components/ImagePicker';
+import { PropertyManager } from '../components/PropertyManager';
 
 type CMSPage = {
   id: string;
@@ -42,7 +43,7 @@ export const CMSPage: React.FC<CMSPageProps> = ({ onNavigate }) => {
   const { isOwner, user } = useAuth();
   const { t, language } = useLanguage();
   const { reloadTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState<'pages' | 'design' | 'media'>('pages');
+  const [activeTab, setActiveTab] = useState<'pages' | 'properties' | 'design' | 'media'>('pages');
   const [pages, setPages] = useState<CMSPage[]>([]);
   const [selectedPage, setSelectedPage] = useState<CMSPage | null>(null);
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
@@ -326,13 +327,6 @@ export const CMSPage: React.FC<CMSPageProps> = ({ onNavigate }) => {
         <div className="text-center max-w-2xl p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Acceso Denegado</h2>
           <p className="text-gray-600 mb-4">Solo el propietario puede acceder al CMS</p>
-          <div className="bg-gray-100 p-4 rounded-lg text-left text-sm">
-            <p className="font-semibold mb-2">Información de diagnóstico:</p>
-            <p>Email: {user?.email || 'No autenticado'}</p>
-            <p>Roles: {roles.length > 0 ? roles.join(', ') : 'Sin roles'}</p>
-            <p>isOwner: {isOwner ? 'Sí' : 'No'}</p>
-            <p>isAdmin: {isAdmin ? 'Sí' : 'No'}</p>
-          </div>
         </div>
       </div>
     );
@@ -375,6 +369,17 @@ export const CMSPage: React.FC<CMSPageProps> = ({ onNavigate }) => {
               <span>Páginas y Contenido</span>
             </button>
             <button
+              onClick={() => setActiveTab('properties')}
+              className={`px-6 py-3 font-semibold transition-colors flex items-center space-x-2 border-b-2 ${
+                activeTab === 'properties'
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Home size={20} />
+              <span>Propiedades</span>
+            </button>
+            <button
               onClick={() => setActiveTab('design')}
               className={`px-6 py-3 font-semibold transition-colors flex items-center space-x-2 border-b-2 ${
                 activeTab === 'design'
@@ -398,6 +403,9 @@ export const CMSPage: React.FC<CMSPageProps> = ({ onNavigate }) => {
             </button>
           </div>
         </div>
+
+        {/* Properties Tab Content */}
+        {activeTab === 'properties' && <PropertyManager />}
 
         {/* Pages Tab Content */}
         {activeTab === 'pages' && (

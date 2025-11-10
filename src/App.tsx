@@ -4,6 +4,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { BackButton } from './components/BackButton';
+import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { CalculatorPage } from './pages/CalculatorPage';
@@ -71,14 +72,15 @@ function App() {
     <AuthProvider>
       <LanguageProvider>
         <ThemeProvider>
-          <div className="min-h-screen">
+          <div className="min-h-screen flex flex-col">
             <Navbar currentPage={currentPage} onNavigate={navigate} />
         {currentPage !== 'home' && pageHistory.length > 1 && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
             <BackButton onClick={goBack} />
           </div>
         )}
-            <main>{renderPage()}</main>
+            <main className="flex-1">{renderPage()}</main>
+            <Footer />
           </div>
         </ThemeProvider>
       </LanguageProvider>
